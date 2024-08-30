@@ -1,0 +1,21 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "export NODE_OPTIONS=--max-old-space-size=4096 && nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@nuxt/ui": "^2.18.4",
+    "nuxt": "^3.12.4"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.5.4",
+    "pinia": "^2.2.2"
+  }
+}
