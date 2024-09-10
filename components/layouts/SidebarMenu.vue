@@ -12,10 +12,19 @@
         </li>
       </ul>
     </nav>
+    <div class="mt-6">
+      <UButton class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded" @click="userStore.logout">
+        ออกจากระบบ
+      </UButton>
+    </div>
   </aside>
 </template>
 
 <script lang="ts" setup>
+import { useUserStore } from '~/stores/user/user';
+
+const userStore = useUserStore()
+
 const props = defineProps({
   title: {
     type: String,

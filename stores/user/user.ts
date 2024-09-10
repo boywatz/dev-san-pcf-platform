@@ -89,5 +89,10 @@ export const useUserStore = defineStore({
       this.profile = profileJson && profileJson !== '' ? JSON.parse(profileJson) : null;
       return this.profile;
     },
+    logout() {
+      localStorage.removeItem('apiToken');
+      localStorage.removeItem('profile');
+      navigateTo('/auth/checkAuthorize');
+    },
   },
 });

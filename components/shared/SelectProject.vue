@@ -13,6 +13,14 @@ const props = defineProps<{
 }>()
 const userStore = useUserStore()
 const selectedProject = ref<string>('')
+
+const resetSelection = () => {
+  selectedProject.value = ''
+}
+
+defineExpose({
+  resetSelection
+})
 </script>
 
 <style></style>
