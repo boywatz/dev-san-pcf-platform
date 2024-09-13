@@ -1,5 +1,5 @@
 import type { BaseAPIResponse } from '~/interface/base-response';
-
+import { useFile } from '../utils/useFile';
 export type IMapRequestDummyToGIDto = {
   projectCode: string;
   requestDummyIds: string[];
@@ -15,6 +15,24 @@ export type ICreateTransferDto = {
     materialCode: string;
     transferQty: number;
   }[];
+};
+export type IDownloadSiteWarehouseTransactionReportDto = {
+  projectCode: string;
+  unit: string;
+  model: string;
+  costCenter: string;
+  transactionTypeId: string; //'ReceiptTransaction', 'RequestGITransaction', 'RequestGIWithoutOrderTransaction', 'RequestDummyTransaction'
+  documentRef: string;
+  flagOverBom: boolean;
+  reasonId: string;
+  materialGroup: string;
+  materialCode: string;
+  transactionDateFrom: string;
+  transactionDateTo: string;
+};
+export type IDownloadSiteWarehouseStockReportDto = {
+  projectCode: string;
+  materialCodes: string[];
 };
 export const useSiteWarehouseApi = (token: string) => {
   const config = useRuntimeConfig();
@@ -96,6 +114,34 @@ export const useSiteWarehouseApi = (token: string) => {
       body: data,
     });
   };
+  const downloadTransactionReport = async (data: IDownloadSiteWarehouseTransactionReportDto) => {
+    const response = (await $fetch(`${apiURL}/reports/download/transaction`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+      responseType: 'blob',
+    })) as any;
+    if ((!response as any).ok) {
+      throw new Error('Network response was not ok');
+    }
+    useFile().downloadHandler(response, `transaction-report`);
+  };
+  const downloadStockReport = async (data: IDownloadSiteWarehouseStockReportDto) => {
+    const response = (await $fetch(`${apiURL}/reports/download/stock`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+      responseType: 'blob',
+    })) as any;
+    if ((!response as any).ok) {
+      throw new Error('Network response was not ok');
+    }
+    useFile().downloadHandler(response, `stock-report`);
+  };
 
   return {
     getUnitList,
@@ -104,5 +150,7 @@ export const useSiteWarehouseApi = (token: string) => {
     mapRequestDummyToGI,
     getStock,
     createTransfer,
+    downloadTransactionReport,
+    downloadStockReport,
   };
 };

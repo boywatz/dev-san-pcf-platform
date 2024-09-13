@@ -10,6 +10,9 @@ export const useAlertStore = defineStore({
     show: false,
   }),
   actions: {
+    success(message?: string, title?: string) {
+      this.open(title || 'สำเร็จ', message || 'ทำรายการสำเร็จ', 'SUCCESS');
+    },
     error(message: string, title?: string) {
       this.open(title || 'พบข้อผิดพลาด', message, 'ERROR');
     },

@@ -37,7 +37,6 @@
 <script lang="ts" setup>
 import type { ICreateTransferDto } from '~/composables/api/useSiteWarehouseApi';
 import { useAlertStore } from '~/stores/alert/alert';
-import { useNotificationStore } from '~/stores/notification/notification';
 import { useStockStore } from '~/stores/site-warehouse/stock';
 import { useTransferStore } from '~/stores/site-warehouse/transfer';
 
@@ -50,7 +49,6 @@ type SelectedTransferItem = {
   transferQty: number;
 }
 
-const notiStore = useNotificationStore();
 const alertStore = useAlertStore();
 const stockStore = useStockStore();
 const transferStore = useTransferStore();
@@ -127,7 +125,7 @@ async function confirm() {
   }
   saveState.value = true;
   await transferStore.create(payload);
-  notiStore.pushSuccess();
+  alertStore.success();
   saveState.value = false;
   resetPage()
 }

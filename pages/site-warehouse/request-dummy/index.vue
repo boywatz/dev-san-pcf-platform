@@ -1,30 +1,38 @@
 <template>
   <div>
     <UBreadcrumb :links="links" />
+    <div class="grid grid-cols-2 gap-2 mt-4">
+      <div>
+        <h2 class="text-xl font-bold mb-4">รายการ Dummy รอ Map</h2>
+        <div class="flex flex-cols items-center space-x-2">
+          <SelectProject @select="selectProject" />
+        </div>
+      </div>
 
-    <h2 class="text-xl font-bold mb-4">รายการ Dummy รอ Map</h2>
-    <div class="flex justify-between items-center mb-4">
-      <SelectProject @select="selectProject" />
+      <div>
+        <h2 class="text-xl font-bold mb-4">รายการวัสดุ</h2>
+        <div class="flex flex-cols items-center space-x-2">
+          <SelectUnit :project-code="selectedProject" @select="(unit) => target = unit" />
+          <UButton label="Map รายการลง GI" @click="showConfirm = true" :disabled="!mappingRows.length || !target" />
+        </div>
+      </div>
     </div>
 
-    <div class="flex justify-between items-center mb-4">
-      <USelect v-model="target" :options="units.map((d: any) => ({
-        value: d.code,
-        label: d.code
-      }))" :placeholder="'เลือกยูนิตที่ต้องการ Map'" />
-    </div>
-    <UTable :columns="columns" :rows="rows" v-model="requestSelected" @select="select">
-      <template #id-header="{ row }">
-        <span></span>
-      </template>
-      <template #target-data="{ row }">
-        <span>{{ row.unit }}{{ row.costCenter }}{{ row.commonArea }}</span>
-      </template>
-    </UTable>
+    <div class="grid grid-cols-2 gap-2 mt-4">
+      <UTable :columns="columns" :rows="rows" v-model="requestSelected" @select="select">
+        <template #id-header="{ row }">
+          <span></span>
+        </template>
+        <template #target-data="{ row }">
+          <span>{{ row.unit }}{{ row.costCenter }}{{ row.commonArea }}</span>
+        </template>
+      </UTable>
 
-    <h2 class="text-xl font-bold mb-4">รายการวัสดุ</h2>
-    <UButton label="Map รายการลง GI" @click="showConfirm = true" :disabled="!mappingRows.length || !target" />
-    <UTable :columns="columnsMapping" :rows="mappingRows"></UTable>
+      <div>
+        <UTable :columns="columnsMapping" :rows="mappingRows"></UTable>
+      </div>
+
+    </div>
   </div>
 
   <div>
@@ -41,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useNotificationStore } from '~/stores/notification/notification';
+import { useAlertStore } from '~/stores/alert/alert';
 import { useRequestDummyStore, type MapToRequestGI, type RequestDummy, type RequestDummyItems } from '~/stores/site-warehouse/request-dummy';
 
 definePageMeta({
@@ -66,7 +74,7 @@ const links = [
 ]
 
 const requestDummyStore = useRequestDummyStore();
-const notiStore = useNotificationStore();
+const alertStore = useAlertStore();
 
 const columns = [
   {
@@ -160,7 +168,7 @@ async function confirm() {
     }
   }
   await requestDummyStore.mapToRequestGI(payload)
-  notiStore.pushSuccess();
+  alertStore.success();
   resetPage(payload.projectCode)
 }
 function resetPage(projectCode?: string) {

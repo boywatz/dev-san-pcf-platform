@@ -27,7 +27,7 @@ const menu = ref([
   },
   {
     link: '/site-warehouse/report',
-    name: 'รายงาน'
+    name: 'Download รายงาน'
   },
 ])
 </script>
