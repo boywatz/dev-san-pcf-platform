@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { useUserStore } from '../user/user';
 import { useSiteWarehouseApi } from '~/composables/api/useSiteWarehouseApi';
+import { useAlertStore } from '../alert/alert';
 
 export interface RequestDummy {
   id: string;
@@ -64,11 +65,14 @@ export const useRequestDummyStore = defineStore({
       }
     },
     async mapToRequestGI(data: MapToRequestGI) {
+      const alertStore = useAlertStore();
       try {
         const token = useUserStore().getToken();
-        return await useSiteWarehouseApi(token!).mapRequestDummyToGI(data);
+        await useSiteWarehouseApi(token!).mapRequestDummyToGI(data);
+        alertStore.success();
+        return true;
       } catch (error) {
-        console.error('Api error', error);
+        alertStore.error(error as string);
         return false;
       }
     },

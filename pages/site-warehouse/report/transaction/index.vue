@@ -13,25 +13,30 @@
         <UToggle v-model="filter.flagOverBom" />
         <label>เลือกเฉพาะการเบิกเกิน Bom</label>
       </div>
+      <SelectOverBomReason ref="selectOverBomReasonRef" @select="(id) => filter.reasonId = id" />
+      <SelectNCRReason ref="selectNCRReasonRef" @select="(id) => filter.reasonId = id" />
+      <DateRangePicker ref="dateRangePickerRef" @select="(range) => dateRange = range" />
       <!--
         TODO: 
-        ไปทำ UI เพิ่ม สำหรับ
-        เลือกรายการเหตุผลการเบิกเกิน Bom,
         เลือกรายการ MaterialGroup,
         เลือกรายการ MaterialCode, MaterialName,
         เลือกวันที่ DateFrom, DateTo
       -->
     </div>
+
   </div>
-  <div class="flex justify-end space-x-2">
+  <div class="flex justify-end space-x-2 mt-4">
     <UButton label="ล้างข้อมูล" color="secondary" @click="resetFilter" />
     <UButton label="ดาวน์โหลดไฟล์" @click="download" :loading="loading" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { sub, format, isSameDay, type Duration } from 'date-fns'
+
 import type { IDownloadSiteWarehouseTransactionReportDto } from '~/composables/api/useSiteWarehouseApi';
 import { useSiteWarehouseReportStore } from '~/stores/site-warehouse/report';
+import { useSiteWarehouseReasonStore } from '~/stores/site-warehouse/reason';
 
 definePageMeta({
   layout: 'site-warehouse'
@@ -52,6 +57,8 @@ const links = [
   }
 ]
 const reportStore = useSiteWarehouseReportStore();
+const reasonStore = useSiteWarehouseReasonStore();
+
 const filter = ref<IDownloadSiteWarehouseTransactionReportDto>({
   projectCode: '',
   unit: '',
@@ -69,6 +76,10 @@ const filter = ref<IDownloadSiteWarehouseTransactionReportDto>({
 const selectProjectRef = ref(null);
 const selectUnitRef = ref(null);
 const selectTransactionTypeRef = ref(null);
+const selectOverBomReasonRef = ref(null);
+const selectNCRReasonRef = ref(null);
+const dateRange = ref(null)
+
 const loading = ref(false);
 
 function costCenterOrUnit(data: string) {
@@ -78,15 +89,17 @@ function costCenterOrUnit(data: string) {
   filter.value.unit = isUnit ? data : '';
 }
 async function download() {
-  loading.value = true;
-  await reportStore.downloadTransaction(filter.value);
-  resetFilter()
-  loading.value = false;
+  // loading.value = true;
+  // await reportStore.downloadTransaction(filter.value);
+  // resetFilter()
+  // loading.value = false;
 }
 function resetFilter() {
   (selectProjectRef.value as any).resetSelection();
   (selectUnitRef.value as any).resetSelection();
   (selectTransactionTypeRef.value as any).resetSelection();
+  (selectOverBomReasonRef.value as any).resetSelection();
+  (selectNCRReasonRef.value as any).resetSelection();
 
   filter.value.projectCode = ''
   filter.value.unit = ''
@@ -101,6 +114,9 @@ function resetFilter() {
   filter.value.transactionDateFrom = ''
   filter.value.transactionDateTo = ''
 }
+onMounted(() => {
+  reasonStore.initialData();
+})
 </script>
 
 <style></style>

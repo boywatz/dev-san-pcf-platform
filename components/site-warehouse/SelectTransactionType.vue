@@ -17,16 +17,20 @@ const list = ref<ITransactionType[]>([
     label: 'เบิกจ่ายวัสดุ-รายแปลง',
   },
   {
+    value: 'RequestGIReorderTransaction',
+    label: 'เบิกจ่ายวัสดุ-งานซ่อมแบบมี Order',
+  },
+  {
     value: 'RequestDummyTransaction',
-    label: 'เบิกจ่ายวัสดุ-Dummy',
+    label: 'เบิกจ่ายวัสดุ-dummy',
   },
   {
     value: 'RequestTempTransaction',
-    label: 'เบิกจ่ายวัสดุ-งานซ่อมบ้านลูกค้า',
+    label: 'งานซ่อม Temp',
   },
   {
     value: 'RequestGIWithoutOrderTransaction',
-    label: 'เบิกจ่ายวัสดุ-งานซ่อม NCR (คชจ. ติดตั้ง, โรงงานไม่มี Order)',
+    label: 'เบิกจ่ายวัสดุ-งานซ่อม (งานซ่อมบ้านลูกค้า, งาน NCR)',
   }
 ]);
 const selected = ref<string>('');

@@ -3,7 +3,7 @@ import { useSiteWarehouseApi, type IDownloadSiteWarehouseStockReportDto, type ID
 import { useUserStore } from '../user/user';
 
 export const useSiteWarehouseReportStore = defineStore({
-  id: 'report-store',
+  id: 'site-warehouse-report-store',
   state: () => ({}),
   actions: {
     async downloadTransaction(filter: IDownloadSiteWarehouseTransactionReportDto) {

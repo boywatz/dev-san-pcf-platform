@@ -167,9 +167,10 @@ async function confirm() {
       unit: target.value,
     }
   }
-  await requestDummyStore.mapToRequestGI(payload)
-  alertStore.success();
-  resetPage(payload.projectCode)
+  const success = await requestDummyStore.mapToRequestGI(payload)
+  if (success) {
+    resetPage(payload.projectCode)
+  }
 }
 function resetPage(projectCode?: string) {
   selectedProject.value = projectCode || ''

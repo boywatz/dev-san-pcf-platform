@@ -21,7 +21,7 @@ export type IDownloadSiteWarehouseTransactionReportDto = {
   unit: string;
   model: string;
   costCenter: string;
-  transactionTypeId: string; //'ReceiptTransaction', 'RequestGITransaction', 'RequestGIWithoutOrderTransaction', 'RequestDummyTransaction'
+  transactionTypeId: string; //'ReceiptTransaction', 'RequestGITransaction', 'RequestGIReorderTransaction', 'RequestGIWithoutOrderTransaction', 'RequestDummyTransaction'
   documentRef: string;
   flagOverBom: boolean;
   reasonId: string;
@@ -142,6 +142,54 @@ export const useSiteWarehouseApi = (token: string) => {
     }
     useFile().downloadHandler(response, `stock-report`);
   };
+  const getOverBomReasons = async () => {
+    const response = (await $fetch(`${apiURL}/kv/request-overbom-reasons`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })) as BaseAPIResponse;
+
+    if (!(response.status === 'success')) return [];
+
+    return response.data;
+  };
+  const getNCRReasons = async () => {
+    const response = (await $fetch(`${apiURL}/kv/request-ncr-reasons`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })) as BaseAPIResponse;
+
+    if (!(response.status === 'success')) return [];
+
+    return response.data;
+  };
+  const getFixCustomerReasons = async () => {
+    const response = (await $fetch(`${apiURL}/kv/request-fix-customer-reasons`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })) as BaseAPIResponse;
+
+    if (!(response.status === 'success')) return [];
+
+    return response.data;
+  };
+  const getMaterialGroups = async () => {
+    const response = (await $fetch(`${apiURL}/kv/material-groups`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })) as BaseAPIResponse;
+
+    if (!(response.status === 'success')) return [];
+
+    return response.data;
+  };
 
   return {
     getUnitList,
@@ -152,5 +200,9 @@ export const useSiteWarehouseApi = (token: string) => {
     createTransfer,
     downloadTransactionReport,
     downloadStockReport,
+    getOverBomReasons,
+    getNCRReasons,
+    getFixCustomerReasons,
+    getMaterialGroups,
   };
 };

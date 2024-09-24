@@ -124,10 +124,11 @@ async function confirm() {
     }))
   }
   saveState.value = true;
-  await transferStore.create(payload);
-  alertStore.success();
-  saveState.value = false;
-  resetPage()
+  const success = await transferStore.create(payload);
+  if (success) {
+    saveState.value = false;
+    resetPage()
+  }
 }
 function resetPage() {
   selectedProject.value = ''
