@@ -1,5 +1,7 @@
 import type { BaseAPIResponse } from '~/interface/base-response';
 import { useFile } from '../utils/useFile';
+import { useErrorHandler } from '../utils/errorHandler';
+
 export type IMapRequestDummyToGIDto = {
   projectCode: string;
   requestDummyIds: string[];
@@ -82,13 +84,17 @@ export const useSiteWarehouseApi = (token: string) => {
     });
   };
   const mapRequestDummyToGI = async (data: IMapRequestDummyToGIDto) => {
-    return await $fetch(`${apiURL}/requests/dummy/map-to-request-gi/unmatch`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: data,
-    });
+    try {
+      return await $fetch(`${apiURL}/requests/dummy/map-to-request-gi/unmatch`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      });
+    } catch (error) {
+      throw useErrorHandler(error);
+    }
   };
   const getStock = async (projectCode: string) => {
     const response = (await $fetch(`${apiURL}/stocks`, {
