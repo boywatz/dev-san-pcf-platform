@@ -15,7 +15,10 @@
       </div>
       <SelectOverBomReason ref="selectOverBomReasonRef" @select="(id) => filter.reasonId = id" />
       <SelectNCRReason ref="selectNCRReasonRef" @select="(id) => filter.reasonId = id" />
-      <DateRangePicker ref="dateRangePickerRef" @select="(range) => dateRange = range" />
+      <DateRangePicker ref="dateRangePickerRef" v-model="dateRange" @update:model-value="() => {
+        filter.transactionDateFrom = useDateHandler(dateRange.start).toDDMMYYYY()
+        filter.transactionDateTo = useDateHandler(dateRange.end).toDDMMYYYY()
+      }" />
       <!--
         TODO: 
         เลือกรายการ MaterialGroup,
@@ -32,8 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { sub, format, isSameDay, type Duration } from 'date-fns'
-
+import { useDateHandler } from '~/composables/utils/dateHandler';
 import type { IDownloadSiteWarehouseTransactionReportDto } from '~/composables/api/useSiteWarehouseApi';
 import { useSiteWarehouseReportStore } from '~/stores/site-warehouse/report';
 import { useSiteWarehouseReasonStore } from '~/stores/site-warehouse/reason';
@@ -89,10 +91,10 @@ function costCenterOrUnit(data: string) {
   filter.value.unit = isUnit ? data : '';
 }
 async function download() {
-  // loading.value = true;
-  // await reportStore.downloadTransaction(filter.value);
-  // resetFilter()
-  // loading.value = false;
+  loading.value = true;
+  await reportStore.downloadTransaction(filter.value);
+  resetFilter()
+  loading.value = false;
 }
 function resetFilter() {
   (selectProjectRef.value as any).resetSelection();

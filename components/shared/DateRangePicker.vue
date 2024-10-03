@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { sub, format, isSameDay, type Duration } from 'date-fns'
 
+
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
+
 const ranges = [
   { label: 'Last 7 days', duration: { days: 7 } },
   { label: 'Last 14 days', duration: { days: 14 } },
@@ -10,6 +14,19 @@ const ranges = [
   { label: 'Last year', duration: { years: 1 } }
 ]
 const selected = ref({ start: sub(new Date(), { days: 7 }), end: new Date() })
+
+onMounted(() => {
+  emit('update:modelValue', selected.value)
+})
+
+watch(() => props.modelValue, (newValue) => {
+  selected.value = newValue
+})
+
+watch(selected, (newValue) => {
+  console.log('new', newValue)
+  emit('update:modelValue', newValue)
+})
 
 function isRangeSelected(duration: Duration) {
   return isSameDay(selected.value.start, sub(new Date(), duration)) && isSameDay(selected.value.end, new Date())
@@ -50,7 +67,7 @@ defineExpose({
             truncate @click="selectRange(range.duration)" />
         </div>
 
-        <DatePicker v-model="selected" @close="close" @update:model-value="$emit('select', emitSelected())" />
+        <DatePicker v-model="selected" @close="close" />
       </div>
     </template>
   </UPopover>
