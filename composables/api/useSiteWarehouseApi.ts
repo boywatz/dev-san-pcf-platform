@@ -41,6 +41,8 @@ export const useSiteWarehouseApi = (token: string) => {
   const baseURL = config.public.siteWarehouseApi;
   const apiURL = `${baseURL}/site-warehouse`;
 
+  console.log('apiURL', apiURL);
+
   const getUnitList = async (projectCode: string) => {
     const response = (await $fetch(`${apiURL}/units`, {
       method: 'GET',
