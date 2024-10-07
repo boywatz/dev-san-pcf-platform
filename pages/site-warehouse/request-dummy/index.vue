@@ -12,7 +12,7 @@
       <div>
         <h2 class="text-xl font-bold mb-4">รายการวัสดุ</h2>
         <div class="flex flex-cols items-center space-x-2">
-          <SelectUnit :project-code="selectedProject" @select="(unit) => target = unit" />
+          <SelectUnit :project-code="selectedProject" @select="(unit) => selectUnit(unit)" />
           <UButton label="Map รายการลง GI" @click="showConfirm = true" :disabled="!mappingRows.length || !target" />
         </div>
       </div>
@@ -51,6 +51,7 @@
 <script lang="ts" setup>
 import { useAlertStore } from '~/stores/alert/alert';
 import { useRequestDummyStore, type MapToRequestGI, type RequestDummy, type RequestDummyItems } from '~/stores/site-warehouse/request-dummy';
+import { useSapMaterialInfoStore } from '~/stores/site-warehouse/sap-material-info';
 
 definePageMeta({
   layout: 'site-warehouse'
@@ -75,6 +76,7 @@ const links = [
 
 const requestDummyStore = useRequestDummyStore();
 const alertStore = useAlertStore();
+const sapMaterialInfoStore = useSapMaterialInfoStore();
 
 const columns = [
   {
@@ -158,6 +160,14 @@ function selectProject(projectCode: string) {
     units.value = data
   })
   selectedProject.value = projectCode
+}
+async function selectUnit(unit: string) {
+  target.value = unit
+
+  await useSapMaterialInfoStore().loadMaterialGroups(
+    selectedProject.value,
+    unit
+  )
 }
 async function confirm() {
   const payload: MapToRequestGI = {

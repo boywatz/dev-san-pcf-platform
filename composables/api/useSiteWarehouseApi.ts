@@ -198,6 +198,41 @@ export const useSiteWarehouseApi = (token: string) => {
 
     return response.data;
   };
+  const getSapMaterialGroups = async (projectCode: string, unit?: string, costCenter?: string) => {
+    const response = (await $fetch(`${apiURL}/material-info/material-groups`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      query: {
+        projectCode,
+        ...(unit && { unit }),
+        ...(costCenter && { costCenter }),
+      },
+    })) as BaseAPIResponse;
+
+    if (!(response.status === 'success')) return [];
+
+    return response.data;
+  };
+  const getSapMaterialBoms = async (projectCode: string, po: string, unit?: string, costCenter?: string) => {
+    const response = (await $fetch(`${apiURL}/material-info/material-boms`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      query: {
+        projectCode,
+        po,
+        ...(unit && { unit }),
+        ...(costCenter && { costCenter }),
+      },
+    })) as BaseAPIResponse;
+
+    if (!(response.status === 'success')) return [];
+
+    return response.data;
+  };
 
   return {
     getUnitList,
@@ -212,5 +247,7 @@ export const useSiteWarehouseApi = (token: string) => {
     getNCRReasons,
     getFixCustomerReasons,
     getMaterialGroups,
+    getSapMaterialGroups,
+    getSapMaterialBoms,
   };
 };
