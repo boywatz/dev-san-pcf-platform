@@ -134,7 +134,7 @@ export const useSiteWarehouseApi = (token: string) => {
     if ((!response as any).ok) {
       throw new Error('Network response was not ok');
     }
-    useFile().downloadHandler(response, `transaction-report`);
+    useFile().downloadHandler(response, 'transaction-report');
   };
   const downloadStockReport = async (data: IDownloadSiteWarehouseStockReportDto) => {
     const response = (await $fetch(`${apiURL}/reports/download/stock`, {
@@ -148,7 +148,7 @@ export const useSiteWarehouseApi = (token: string) => {
     if ((!response as any).ok) {
       throw new Error('Network response was not ok');
     }
-    useFile().downloadHandler(response, `stock-report`);
+    useFile().downloadHandler(response, 'stock-report');
   };
   const getOverBomReasons = async () => {
     const response = (await $fetch(`${apiURL}/kv/request-overbom-reasons`, {
