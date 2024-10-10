@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useAuthApi } from '~/composables/api/useAuthApi';
+import { jwtDecode } from 'jwt-decode';
 
 interface UserStore {
   token: string | null;
@@ -81,8 +82,17 @@ export const useUserStore = defineStore({
       const resp = await useAuthApi().authorize();
       return (resp as any)?.authUrl;
     },
-    getToken(): string | null {
-      return localStorage.getItem('apiToken');
+    getToken() {
+      const token = localStorage.getItem('apiToken');
+      if (token) {
+        const decoded = jwtDecode(token) as any;
+        if (decoded.serviceId && decoded.exp) {
+          return Math.floor(Date.now() / 1000) > decoded.exp ? null : token;
+        } else {
+          this.logout();
+        }
+      }
+      this.logout();
     },
     getProfile(): Profile | null {
       const profileJson = localStorage.getItem('profile');
@@ -93,6 +103,19 @@ export const useUserStore = defineStore({
       localStorage.removeItem('apiToken');
       localStorage.removeItem('profile');
       navigateTo('/auth/checkAuthorize');
+    },
+    checkTokenAlive() {
+      const [validToken, validProfile] = [this.getToken(), this.getProfile()];
+      if (!validToken || !validProfile) this.logout();
+    },
+    setRedirect() {
+      const decoded = jwtDecode(this.token!) as any;
+      switch (decoded.serviceId) {
+        case 'PCF-SWH':
+          navigateTo('/site-warehouse');
+        default:
+          break;
+      }
     },
   },
 });

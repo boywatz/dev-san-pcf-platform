@@ -16,7 +16,7 @@ import type { IDownloadSiteWarehouseStockReportDto } from '~/composables/api/use
 import { useSiteWarehouseReportStore } from '~/stores/site-warehouse/report';
 
 definePageMeta({
-  layout: 'site-warehouse'
+  layout: 'site-warehouse',
 })
 const links = [
   {

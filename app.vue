@@ -16,6 +16,7 @@ const alertStore = useAlertStore();
 
 onMounted(() => {
   userStore.getProfile();
-  //check token expired later
+  if (userStore.isLoggedIn)
+    userStore.checkTokenAlive();
 })
 </script>

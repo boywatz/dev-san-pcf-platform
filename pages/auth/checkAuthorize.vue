@@ -19,6 +19,7 @@ const checkAuthorize = async () => {
   } else {
     userStore.setToken(token);
     userStore.setAuthenticated(true);
+    userStore.setRedirect();
   }
 }
 </script>

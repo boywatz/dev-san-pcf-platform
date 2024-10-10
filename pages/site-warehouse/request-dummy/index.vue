@@ -54,7 +54,7 @@ import { useRequestDummyStore, type MapToRequestGI, type RequestDummy, type Requ
 import { useSapMaterialInfoStore } from '~/stores/site-warehouse/sap-material-info';
 
 definePageMeta({
-  layout: 'site-warehouse'
+  layout: 'site-warehouse',
 })
 
 type IPreviewMappingRequestItem = {

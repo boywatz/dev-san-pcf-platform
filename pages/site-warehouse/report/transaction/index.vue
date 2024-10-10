@@ -16,8 +16,8 @@
       <SelectOverBomReason ref="selectOverBomReasonRef" @select="(id) => filter.reasonId = id" />
       <SelectNCRReason ref="selectNCRReasonRef" @select="(id) => filter.reasonId = id" />
       <DateRangePicker ref="dateRangePickerRef" v-model="dateRange" @update:model-value="() => {
-        filter.transactionDateFrom = useDateHandler(dateRange.start).toDDMMYYYY()
-        filter.transactionDateTo = useDateHandler(dateRange.end).toDDMMYYYY()
+        filter.transactionDateFrom = useDateHandler(dateRange?.start).toDDMMYYYY()
+        filter.transactionDateTo = useDateHandler(dateRange?.end).toDDMMYYYY()
       }" />
       <!--
         TODO: 
@@ -41,7 +41,7 @@ import { useSiteWarehouseReportStore } from '~/stores/site-warehouse/report';
 import { useSiteWarehouseReasonStore } from '~/stores/site-warehouse/reason';
 
 definePageMeta({
-  layout: 'site-warehouse'
+  layout: 'site-warehouse',
 })
 const links = [
   {
@@ -80,7 +80,7 @@ const selectUnitRef = ref(null);
 const selectTransactionTypeRef = ref(null);
 const selectOverBomReasonRef = ref(null);
 const selectNCRReasonRef = ref(null);
-const dateRange = ref(null)
+const dateRange = ref()
 
 const loading = ref(false);
 

@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 definePageMeta({
-  layout: 'site-warehouse'
+  layout: 'site-warehouse',
 })
 const links = [
   {

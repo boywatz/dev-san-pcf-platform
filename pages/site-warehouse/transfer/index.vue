@@ -41,7 +41,7 @@ import { useStockStore } from '~/stores/site-warehouse/stock';
 import { useTransferStore } from '~/stores/site-warehouse/transfer';
 
 definePageMeta({
-  layout: 'site-warehouse'
+  layout: 'site-warehouse',
 })
 
 type SelectedTransferItem = {
