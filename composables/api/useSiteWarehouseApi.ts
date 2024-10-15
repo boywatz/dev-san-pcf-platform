@@ -1,5 +1,5 @@
 import type { BaseAPIResponse } from '~/interface/base-response';
-import { useFile } from '../utils/useFile';
+import { fileHandler } from '../utils/fileHandler';
 import { useErrorHandler } from '../utils/errorHandler';
 
 export type IMapRequestDummyToGIDto = {
@@ -85,7 +85,7 @@ export const useSiteWarehouseApi = (token: string) => {
   };
   const mapRequestDummyToGI = async (data: IMapRequestDummyToGIDto) => {
     try {
-      return await $fetch(`${apiURL}/requests/dummy/map-to-request-gi/unmatch`, {
+      return await $fetch(`${apiURL}/requests/dummy/map-request-dummy`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -132,7 +132,7 @@ export const useSiteWarehouseApi = (token: string) => {
     if ((!response as any).ok) {
       throw new Error('Network response was not ok');
     }
-    useFile().downloadHandler(response, 'transaction-report');
+    fileHandler().downloadHandler(response, 'transaction-report');
   };
   const downloadStockReport = async (data: IDownloadSiteWarehouseStockReportDto) => {
     const response = (await $fetch(`${apiURL}/reports/download/stock`, {
@@ -146,7 +146,7 @@ export const useSiteWarehouseApi = (token: string) => {
     if ((!response as any).ok) {
       throw new Error('Network response was not ok');
     }
-    useFile().downloadHandler(response, 'stock-report');
+    fileHandler().downloadHandler(response, 'stock-report');
   };
   const getOverBomReasons = async () => {
     const response = (await $fetch(`${apiURL}/kv/request-overbom-reasons`, {
@@ -231,6 +231,21 @@ export const useSiteWarehouseApi = (token: string) => {
 
     return response.data;
   };
+  const getNotify = async (projectCode?: string) => {
+    const response = (await $fetch(`${apiURL}/notifies`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      query: {
+        ...(projectCode && { projectCode }),
+      },
+    })) as BaseAPIResponse;
+
+    if (!(response.status === 'success')) return [];
+
+    return response.data;
+  };
 
   return {
     getUnitList,
@@ -247,5 +262,6 @@ export const useSiteWarehouseApi = (token: string) => {
     getMaterialGroups,
     getSapMaterialGroups,
     getSapMaterialBoms,
+    getNotify,
   };
 };

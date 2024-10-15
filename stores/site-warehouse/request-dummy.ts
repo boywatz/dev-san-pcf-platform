@@ -2,11 +2,13 @@ import { defineStore } from 'pinia';
 import { useUserStore } from '../user/user';
 import { useSiteWarehouseApi } from '~/composables/api/useSiteWarehouseApi';
 import { useAlertStore } from '../alert/alert';
+import { useMasterDataApi } from '~/composables/api/useMasterDataApi';
 
 export interface RequestDummy {
   id: string;
   projectCode: string;
   materialGroup: string;
+  materialGroupDesc: string;
   status: string;
   unit?: string;
   model?: string;
@@ -35,6 +37,8 @@ export interface MapToRequestGI {
   target: {
     unit?: string;
     costCenter?: string;
+    materialGroup: string;
+    po: string;
   };
 }
 export const useRequestDummyStore = defineStore({
@@ -58,7 +62,16 @@ export const useRequestDummyStore = defineStore({
     async loadUnit(projectCode: string) {
       try {
         const token = useUserStore().getToken();
-        return await useSiteWarehouseApi(token!).getUnitList(projectCode);
+        return await useMasterDataApi(token!).getUnitList(projectCode);
+      } catch (error) {
+        console.error('Api error', error);
+        return [];
+      }
+    },
+    async loadCostCenter(projectCode: string) {
+      try {
+        const token = useUserStore().getToken();
+        return await useMasterDataApi(token!).getCostCenterList(projectCode);
       } catch (error) {
         console.error('Api error', error);
         return [];

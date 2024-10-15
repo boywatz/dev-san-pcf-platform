@@ -2,7 +2,7 @@
   <USelect v-model="selectedUnit" :options="units.map((d) => ({
     value: d.code,
     label: d.code
-  }))" placeholder="เลือก แปลง/IO/CostCenter" @change="$emit('select', selectedUnit)" :loading="loading"
+  }))" placeholder="เลือก IO/CostCenter" @change="$emit('select', selectedUnit)" :loading="loading"
     :disabled="!props.projectCode" />
 </template>
 
@@ -26,8 +26,15 @@ const resetSelection = () => {
 
 const fetchData = async (projectCode: string) => {
   loading.value = true;
-  const unitList = await useMasterDataApi(userStore.getToken()!).getUnitList(projectCode);
-  units.value = unitList;
+  // const unitList = await useMasterDataApi(userStore.getToken()!).getUnitList(projectCode);
+  const [unitList, costCenterList] = await Promise.all([
+    useMasterDataApi(userStore.getToken()!).getUnitList(projectCode),
+    useMasterDataApi(userStore.getToken()!).getCostCenterList(projectCode)
+  ])
+  units.value = [
+    ...unitList,
+    ...costCenterList
+  ]
   loading.value = false;
 }
 

@@ -5,8 +5,10 @@ import { useSiteWarehouseApi } from '~/composables/api/useSiteWarehouseApi';
 export const useSapMaterialInfoStore = defineStore({
   id: 'sap-material-info',
   state: () => ({
-    materialGroups: [],
-    materialBom: {},
+    materialGroups: [] as any,
+    activePO: '',
+    activeMaterialGroup: '',
+    activeMaterialItems: [] as any,
   }),
   actions: {
     async loadMaterialGroups(projectCode: string, unit?: string, costCenter?: string) {
@@ -14,7 +16,6 @@ export const useSapMaterialInfoStore = defineStore({
         const token = useUserStore().getToken();
         const data = await useSiteWarehouseApi(token!).getSapMaterialGroups(projectCode, unit, costCenter);
         this.materialGroups = data;
-        console.log('materialGroups', this.materialGroups);
       } catch (error) {
         console.error('Api error', error);
         return [];
@@ -24,8 +25,8 @@ export const useSapMaterialInfoStore = defineStore({
       try {
         const token = useUserStore().getToken();
         const data = await useSiteWarehouseApi(token!).getSapMaterialBoms(projectCode, po, unit, costCenter);
-        this.materialBom = data;
-        console.log('materialBom', this.materialBom);
+        this.activeMaterialGroup = data.materialGroup.materialGroup;
+        this.activeMaterialItems = data.sapMaterialBomItems;
       } catch (error) {
         console.error('Api error', error);
         return [];

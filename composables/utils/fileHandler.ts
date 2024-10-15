@@ -1,4 +1,4 @@
-export const useFile = () => {
+export const fileHandler = () => {
   const downloadHandler = (blob: Blob, filename: string) => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');

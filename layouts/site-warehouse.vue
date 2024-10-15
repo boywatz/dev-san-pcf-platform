@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+
 const menu = ref([
   {
     link: '/site-warehouse',
@@ -23,12 +24,11 @@ const menu = ref([
   },
   {
     link: '/site-warehouse/request-dummy',
-    name: 'รายการเบิก-Dummy'
+    name: `รายการเบิก-Dummy`,
   },
   {
     link: '/site-warehouse/report',
     name: 'Download รายงาน'
   },
 ])
-
 </script>

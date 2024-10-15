@@ -7,7 +7,7 @@
       <ul class="space-y-4">
         <li v-for="(item, index) in $props.menu">
           <a :href="item.link" class="block text-white hover:text-secondary">
-            {{ item.name }}
+            {{ item.name }} {{ item.link.includes('dummy') ? `(${notifyStore.countDummyWaitingToMapping})` : '' }}
           </a>
         </li>
       </ul>
@@ -22,8 +22,10 @@
 
 <script lang="ts" setup>
 import { useUserStore } from '~/stores/user/user';
+import { useSiteWarehouseNotify } from '~/stores/site-warehouse/notify';
 
 const userStore = useUserStore()
+const notifyStore = useSiteWarehouseNotify();
 
 const props = defineProps({
   title: {
@@ -32,8 +34,13 @@ const props = defineProps({
   },
   menu: Array<{
     link: string,
-    name: string
+    name: string,
   }>
+})
+
+
+onMounted(() => {
+  notifyStore.loadData();
 })
 </script>
 
