@@ -11,6 +11,14 @@ export const useAuthApi = () => {
       },
     });
   };
+  const logout = async (token: string) => {
+    return await $fetch(`${baseURL}/auth/logout`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
   const profile = async (token: string) => {
     return await $fetch(`${baseURL}/profile`, {
       method: 'GET',
@@ -22,5 +30,6 @@ export const useAuthApi = () => {
   return {
     authorize,
     profile,
+    logout,
   };
 };

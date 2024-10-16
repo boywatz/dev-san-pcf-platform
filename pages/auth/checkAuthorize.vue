@@ -12,7 +12,7 @@ onMounted(async () => {
 })
 
 const checkAuthorize = async () => {
-  const token = userStore.getToken();
+  const token = localStorage.getItem('apiToken');
   if (!token) {
     const authUrl = await userStore.getAuthorizeUrl();
     navigateTo(authUrl, { external: true });

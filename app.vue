@@ -13,10 +13,4 @@ import { useAlertStore } from '~/stores/alert/alert';
 
 const userStore = useUserStore();
 const alertStore = useAlertStore();
-
-onMounted(() => {
-  userStore.getProfile();
-  if (userStore.isLoggedIn)
-    userStore.checkTokenAlive();
-})
 </script>

@@ -57,6 +57,7 @@ export const useUserStore = defineStore({
         if (isValid) {
           this.setToken(token);
           this.setAuthenticated(true);
+          this.setRedirect();
         }
       } catch (error) {
         console.error('Invalid token', error);
@@ -86,35 +87,48 @@ export const useUserStore = defineStore({
       const token = localStorage.getItem('apiToken');
       if (token) {
         const decoded = jwtDecode(token) as any;
+        this.token = token;
         if (decoded.serviceId && decoded.exp) {
-          return Math.floor(Date.now() / 1000) > decoded.exp ? null : token;
+          if (!Math.floor(Date.now() / 1000) > decoded.exp) {
+            return this.logout().then(() => {
+              return null;
+            });
+          } else {
+            return token;
+          }
         } else {
-          this.logout();
+          return this.setRedirect();
         }
+      } else {
+        return this.setRedirect();
       }
-      this.logout();
     },
     getProfile(): Profile | null {
       const profileJson = localStorage.getItem('profile');
       this.profile = profileJson && profileJson !== '' ? JSON.parse(profileJson) : null;
       return this.profile;
     },
-    logout() {
+    async logout() {
+      const token = localStorage.getItem('apiToken');
+      if (token) {
+        await useAuthApi().logout(token!);
+      }
       localStorage.removeItem('apiToken');
       localStorage.removeItem('profile');
-      navigateTo('/auth/checkAuthorize');
-    },
-    checkTokenAlive() {
-      const [validToken, validProfile] = [this.getToken(), this.getProfile()];
-      if (!validToken || !validProfile) this.logout();
+      this.setRedirect();
     },
     setRedirect() {
-      const decoded = jwtDecode(this.token!) as any;
+      const token = localStorage.getItem('apiToken');
+      if (!token) {
+        this.token = null;
+        return navigateTo('/auth/checkAuthorize');
+      }
+      const decoded = jwtDecode(token) as any;
       switch (decoded.serviceId) {
         case 'PCF-SWH':
-          navigateTo('/site-warehouse');
+          return navigateTo('/site-warehouse');
         default:
-          break;
+          return navigateTo('/auth/checkAuthorize');
       }
     },
   },

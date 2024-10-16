@@ -9,11 +9,9 @@ import { useUserStore } from '~/stores/user/user';
 const route = useRoute();
 const userStore = useUserStore();
 
-onMounted(() => {
+onMounted(async () => {
   const { token } = route.query;
-  userStore.validateAndSetToken(token!.toString()).then(() => {
-    navigateTo('/site-warehouse')
-  })
+  await userStore.validateAndSetToken(token!.toString());
 })
 </script>
 
