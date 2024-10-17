@@ -23,6 +23,15 @@ type Profile = {
     projectCode: string;
     projectName: string;
   }[];
+  store: {
+    storeId: number;
+    storeCode: string;
+    storeName: string;
+    projects: {
+      projectCode: string;
+      projectName: string;
+    }[];
+  }[];
 };
 export const useUserStore = defineStore({
   id: 'user-store',
@@ -42,12 +51,14 @@ export const useUserStore = defineStore({
         roleName: '',
       },
       projects: [],
+      store: [],
     },
   }),
   getters: {
     apiToken: (state) => state.token,
     isLoggedIn: (state) => state.isAuthenticated,
     projects: (state) => state.profile.projects,
+    store: (state) => state.profile.store,
   },
   actions: {
     async validateAndSetToken(token: string) {

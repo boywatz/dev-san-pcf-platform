@@ -28,8 +28,8 @@ const fetchData = async (projectCode: string) => {
   loading.value = true;
   // const unitList = await useMasterDataApi(userStore.getToken()!).getUnitList(projectCode);
   const [unitList, costCenterList] = await Promise.all([
-    useMasterDataApi(userStore.getToken()!).getUnitList(projectCode),
-    useMasterDataApi(userStore.getToken()!).getCostCenterList(projectCode)
+    useMasterDataApi(userStore.token!).getUnitList(projectCode),
+    useMasterDataApi(userStore.token!).getCostCenterList(projectCode)
   ])
   units.value = [
     ...unitList,
