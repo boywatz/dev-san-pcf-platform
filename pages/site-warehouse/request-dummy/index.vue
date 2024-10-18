@@ -14,8 +14,12 @@
             </div>
 
             <div v-if="target.unit || target.costCenter">
-              <div class="mt-4" v-if="!sapMaterialInfoStore.materialGroups.length">
+              <div class="mt-4" v-if="sapMaterialInfoStore.loading && !sapMaterialInfoStore.materialGroups.length">
                 กรุณารอสักครู่ กำลังดึงข้อมูลจาก SAP ...
+              </div>
+              <div class="mt-4"
+                v-else-if="!sapMaterialInfoStore.loading && sapMaterialInfoStore.materialGroups.length === 0">
+                ไม่พบข้อมูล PO จาก SAP
               </div>
               <div class="mt-4" v-else>
                 <URadioGroup legend="PO" v-model="sapMaterialInfoStore.activePO" @change="selectPO" :options="sapMaterialInfoStore.materialGroups.map((g: any) => ({
