@@ -271,14 +271,18 @@ function mapItem(data: RequestDummy[]) {
           materialCode: item.materialCode,
           materialName: curMatOnStock?.materialName || '',
           totalRequest: item.requestQty,
-          bomQty: curMatOnBom && curMatOnBom.bomQty > 0 ? curMatOnBom.bomQty + item.requestQty : 0,
-          stockQty: curMatOnStock && curMatOnStock.qty > 0 ? curMatOnStock?.qty + item.requestQty : 0
+          bomQty: curMatOnBom && curMatOnBom.bomQty > 0 ? curMatOnBom.bomQty : 0,
+          stockQty: curMatOnBom && curMatOnBom.urStock > 0 ? curMatOnBom.urStock : curMatOnStock && curMatOnStock?.qty + item.requestQty > 0 ? curMatOnStock?.qty + item.requestQty : 0
         })
       } else {
         const index = items.findIndex((i) => i.materialCode === item.materialCode)
         items[index].totalRequest += item.requestQty
-        if (items[index].bomQty > 0)
+        if (items[index].bomQty > 0) {
           items[index].bomQty += item.requestQty;
+        } else {
+          //TODO: อาจจะต้องแก้ หลัง SAP compute dummy เอง
+          items[index].stockQty += item.requestQty;
+        }
       }
     })
   })
@@ -328,7 +332,6 @@ function resetPage(projectCode?: string) {
   }
   showConfirm.value = false
   tabSelected.value = 0
-  activeElectionGroup.value = ''
   sapMaterialInfoStore.activePO = ''
   sapMaterialInfoStore.activeMaterialGroup = ''
   sapMaterialInfoStore.materialGroups = []
@@ -336,7 +339,7 @@ function resetPage(projectCode?: string) {
   requestDummyStore.list = []
   requestDummyStore.loadData(selectedProject.value, 'PENDING')
 }
-function targetHandler(data: string): { unit: string, costCenter: string } {
+function targetHandler(data: string): { unit: string, costCenter: string, materialGroup: string, po: string } {
   const io = data.includes('-') ? true : false;
   return {
     unit: io ? data : '',
